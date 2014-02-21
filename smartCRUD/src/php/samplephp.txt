@@ -1,0 +1,111 @@
+<?php
+#####DOCUMENT HEADER######
+/**
+  * SmartCRUD - A smarty based CRUD code generator
+  *
+  * Description:-
+  * File created by SmartCRUD - A smarty based CRUD code generator
+  *
+  * @copyright Copyright (C) 2007 Murugan Krishnamoorthy <phpinbox@gmail.com>
+  * @author Murugan Krishnamoorthy <phpinbox@gmail.com>
+  * @author Ganesan <rmdganesan@gmail.com>
+  * @package #PROJECTNAME# - FORM Management file for ADD,EDIT,DELETE Records 
+  * @category PHPfile
+  * @version $Id: #TEMPLATE_NAME#.php,v 1.0 #FILEDATE#
+  * @link	http://www.smartcrud.com/
+  * @license http://creativecommons.org/licenses/by-sa/3.0/us/
+  */
+#####DOCUMENT HEADER######
+
+require_once("./config/config.inc.php");
+
+//User message constants
+define("#TABLENAME##FUNCSUFFIX#ADDED","Record added successfully!");
+define("#TABLENAME##FUNCSUFFIX#ADDINGFAILED","Sorry, Your record cann't be added!");
+define("#TABLENAME##FUNCSUFFIX#EDITED","Record updated successfully!");
+define("#TABLENAME##FUNCSUFFIX#EDITINGFAILED","Sorry, Your record cann't be updated!");
+define("#TABLENAME##FUNCSUFFIX#DELETED","Record deleted successfully!");
+define("#TABLENAME##FUNCSUFFIX#DELETINGFAILED","Sorry, Your record cann't be deleted!");
+
+$request_vars=request_wrapper::get_request_vars();
+
+$form=(empty($request_vars['actionflag']))?"listall":$request_vars['actionflag'];
+
+$pagetpl="#TEMPLATE_NAME#.tpl";
+
+#INSERTTOP#
+require_once(CLASS_PATH."class.#CLASSNAME#.php");
+$#OBJECTNAME#Obj = new #CLASSNAME#();
+
+$smarty->assign('actionflag', "add");
+$smarty->assign('useralert', $request_vars['msg']);
+
+$request_vars['recordsperpage']=isset($request_vars['recordsperpage'])?$request_vars['recordsperpage']:#LISTSIZE#;
+$start=(empty($request_vars['start']))?0:$request_vars['start'];
+$end=$request_vars['recordsperpage'];
+$qrycondition="1";		
+if(isset($request_vars['sortby']) AND isset($request_vars['sortorder'])){
+	$qrycondition.=" ORDER BY ".$request_vars['sortby']." ".$request_vars['sortorder'];
+}
+if(isset($end) AND isset($start)){
+	$qrycondition.=" LIMIT ".$start.",".$end;
+}
+		
+switch ($form){
+	case "add":
+		if ($#OBJECTNAME#Obj->add#FUNCSUFFIX#() != false) {
+		   header("location:#TEMPLATE_NAME#.php?msg=".#TABLENAME##FUNCSUFFIX#ADDED);
+		}else{
+		   $smarty->assign('useralert',#TABLENAME##FUNCSUFFIX#ADDINGFAILED);
+		}
+		break;
+	case "view":
+		$#TABLENAME##FUNCSUFFIX#=$#OBJECTNAME#Obj->view#FUNCSUFFIX#();
+		#SMARTYARRAYS#
+		$smarty->assign('#TABLENAME##FUNCSUFFIX#',$#TABLENAME##FUNCSUFFIX#);
+		$smarty->assign('actionflag', "edit");
+		break;
+	case "edit":
+		if ($#OBJECTNAME#Obj->edit#FUNCSUFFIX#() != false) {
+		   header("location:#TEMPLATE_NAME#.php?msg=".#TABLENAME##FUNCSUFFIX#EDITED);
+		}else{
+		   $smarty->assign('useralert', #TABLENAME##FUNCSUFFIX#EDITINGFAILED);
+		}
+		break;
+	case "delete":	
+		if ($#OBJECTNAME#Obj->delete#FUNCSUFFIX#()) {
+		   $smarty->assign('useralert', #TABLENAME##FUNCSUFFIX#DELETED);
+		}else{
+		   $smarty->assign('useralert', #TABLENAME##FUNCSUFFIX#DELETINGFAILED);
+		}
+		break;
+	case "listall":
+		//for pagination
+		
+		$total_records=$contentObj->get_no_of_records();
+		$smarty->assign('total_records',$total_records);
+		$smarty->assign('#TABLENAME##FUNCSUFFIX#s', $#OBJECTNAME#Obj->listall#FUNCSUFFIX#($qrycondition));
+
+
+		break;
+	default:		
+		break;
+}
+if($form != "listall"){
+$total_records=$contentObj->get_no_of_records();
+$smarty->assign('total_records',$total_records);
+$smarty->assign('#TABLENAME##FUNCSUFFIX#s', $#OBJECTNAME#Obj->listall#FUNCSUFFIX#($qrycondition));
+}
+
+$smarty->assign('sortbystart',$start);
+$request_vars['recordsperpage']=($total_records>=$request_vars['recordsperpage'])?$request_vars['recordsperpage']:$total_records;
+$next=$request_vars['start']+$request_vars['recordsperpage'];
+$prev=$request_vars['start']-$request_vars['recordsperpage'];
+$smarty->assign('prev',$prev);
+$smarty->assign('next',$next);
+$smarty->assign('recordsperpage',$request_vars['recordsperpage']);
+#INSERTBOTTOM#
+
+#SMARTYASSIGNS#
+$smarty->display($pagetpl);
+?>

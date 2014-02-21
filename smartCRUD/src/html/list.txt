@@ -1,0 +1,74 @@
+
+{literal}
+<script>
+function submitthis(startval){
+document.paginationfrm.start.value=startval;
+document.paginationfrm.submit();
+}
+
+function sortbysubmit(bywhat,order){
+document.sortingfrm.sortby.value=bywhat;
+document.sortingfrm.sortorder.value=order;
+document.sortingfrm.submit();
+}
+</script>
+{/literal}
+
+<!-- Form for pagination -->
+
+<form name="paginationfrm" action="{$smarty.server.PHP_SELF}" method="post">
+ <input type="hidden" name="recordsperpage" value="{$smarty.request.recordsperpage}">
+ <input type="hidden" name="actionflag" value="listall">	
+ <input type="hidden" name="start" value="">
+{if $smarty.request.sortby neq '' && $smarty.request.sortorder neq ''}
+ <input type="hidden" name="sortby" value="{$smarty.request.sortby}">
+ <input type="hidden" name="sortorder" value="{$smarty.request.sortorder}">
+ {/if}
+</form>
+
+<!-- Form for sorting -->
+
+<form name="sortingfrm" action="{$smarty.server.PHP_SELF}" method="post">
+<input type="hidden" name="recordsperpage" value="{$smarty.request.recordsperpage}">
+<input type="hidden" name="start" value="{$sortbystart}">
+<input type="hidden" name="sortby" value="">	
+<input type="hidden" name="actionflag" value="listall">	
+<input type="hidden" name="sortorder" value="ASC">	
+</form>
+{if $total_records > 0}
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+<tr><td align="left">Total no of records {$total_records}</td> 
+<td align="right">
+  {if $smarty.request.start > 0}
+	{$smarty.request.start}
+    {else}
+	{if $next <= $total_records}
+	1
+	{else}
+	{$total_records}
+	{/if}
+    {/if}
+    -
+   {if $next <= $total_records}
+	{$next}
+   {else}
+	{$total_records}
+   {/if}
+  
+   records of {$total_records}
+   
+   {if $prev >= 0}
+   <br>
+   <a href="#" onclick="submitthis({$prev});"><< Previous</a>
+    &nbsp;
+   {/if}
+   {if $next < $total_records}
+   {if $prev < 0}
+    <br>
+   {/if}
+   &nbsp;
+   <a href="#" onclick="submitthis({$next});">Next >></a>
+   {/if}  
+</td></tr>
+</table>
+{/if}

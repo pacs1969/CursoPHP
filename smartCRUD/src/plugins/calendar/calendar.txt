@@ -1,0 +1,21 @@
+<link href="{$site_url}plugins/calendar/js/zpcal.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" media="all" href="{$site_url}plugins/calendar/js/bluexp.css" title="Calendar Theme - bluexp.css" >
+<input type="text" name="#FIELDNAME#"  id="#FIELDID#" value="" readonly>
+<img src="{$site_url}plugins/calendar/calendar.gif" id="#FIELDNAME#_button">
+<script type="text/javascript" src="{$site_url}plugins/calendar/js/utils.js"></script>
+<script type="text/javascript" src="{$site_url}plugins/calendar/js/calendar.js"></script>
+<script type="text/javascript" src="{$site_url}plugins/calendar/js/calendar-en.js"></script>
+<script type="text/javascript" src="{$site_url}plugins/calendar/js/calendar-setup.js"></script>
+
+{literal}
+<script type="text/javascript">
+var cal = new Zapatec.Calendar.setup({
+  inputField     :    "#FIELDNAME#",     // id of the input field
+  singleClick    :     true,     // require two clicks to submit
+  //ifFormat       :    '%Y-%m-%d %H:%M:%S',     //  of the input field
+  ifFormat       :    '%Y-%m-%d %H:%M:%S',     //  of the input field
+  showsTime      :     #TIMEFLAG#,     // show time as well as date
+  button         :    "#FIELDNAME#_button"  // trigger button
+  });
+</script>
+{/literal}

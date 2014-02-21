@@ -1,0 +1,112 @@
+<?
+/**
+  * SmartCRUD - A smarty based CRUD code generator
+  *
+  * Description:-
+  * File created by SmartCRUD - A smarty based CRUD code generator
+  *
+  * @copyright Copyright (C) 2007 Murugan Krishnamoorthy <phpinbox@gmail.com>
+  * @author Murugan Krishnamoorthy <phpinbox@gmail.com>
+  * @author Ganesan <rmdganesan@gmail.com>
+  * @package #PROJECTNAME# - FORM Management class for ADD,EDIT,DELETE Records 
+  * @category ClassFile
+  * @version $Id: class.#CLASSNAME#.php,v 1.0 #FILEDATE#
+  * @link	http://www.smartcrud.com/
+  * @license http://creativecommons.org/licenses/by-sa/3.0/us/
+  */
+
+class #CLASSNAME# extends class_base{
+	
+	/**
+	 * constructor for #CLASSNAME# class
+	 */
+	function init(){
+	#CONSTRUCT#	
+	}
+	/**
+	 * destructor for #CLASSNAME# class
+	 */
+	function dispose(){
+	#DESTRUCT#
+	}
+   	/**
+	 * For #FUNCSUFFIX# adding
+	 *
+	 * @return bool
+	 */
+	function add#FUNCSUFFIX#(){
+		#ADDFUNCTION#
+		$#TABLENAME#Info=#INFOARRAY#;
+		$this->insertid=($id=$this->dbObj->DBW_insert(#TABLECONST#,$#TABLENAME#Info))?$id:false;
+		return $this->insertid;
+	}
+	/**
+         * For #FUNCSUFFIX# editing
+	 *
+         * @return bool
+         */
+	function edit#FUNCSUFFIX#(){
+		#EDITFUNCTION#
+		$qrycondition="#PRIMARYKEY#=".$this->request_vars['#PRIMARYKEY#'];
+		$#TABLENAME#Info=#INFOARRAY#;
+		//$#TABLENAME#Info=array_merge($#TABLENAME#Info,array("#PRIMARYKEY#",#PRIMARYKEYVAR#));
+		$updatestatus=$this->dbObj->DBW_update(#TABLECONST#,$#TABLENAME#Info,$qrycondition);
+		return $updatestatus;
+	}
+	/**
+         * For #FUNCSUFFIX# deleting
+	 *
+         * @return bool
+         */
+	function delete#FUNCSUFFIX#(){
+		#DELETEFUNCTION#
+		$qrycondition="#PRIMARYKEY#=".$this->request_vars['#PRIMARYKEY#'];
+		$deltatus=$this->dbObj->DBW_delete(#TABLECONST#,$qrycondition);
+		return $deltatus;
+	}
+	/**
+         * For #FUNCSUFFIX# showing
+	 *
+         * @return array
+         */
+	function view#FUNCSUFFIX#(){
+		#SHOWFUNCTION#
+		$qrycondition="#PRIMARYKEY#=".$this->request_vars['#PRIMARYKEY#'];
+		return $this->dbObj->DBW_getrow(#TABLECONST#,NULL,$qrycondition);
+	}
+	/**
+         * For listall#FUNCSUFFIX# listing
+	 *
+         * @return array
+         */
+	function listall#FUNCSUFFIX#($qrycondition=NULL){
+		#LISTALLFUNCTION#
+		return $this->dbObj->DBW_getrows(#TABLECONST#,NULL,$qrycondition);
+	}
+	/**
+         * For #GET_NO_OF_RECORDS# listing
+	 *
+         * @return array
+         */
+	function get_no_of_records($qrycondition=NULL){
+		#GET_NO_OF_RECORDS#
+		return $this->dbObj->get_no_of_records(#TABLECONST#,NULL,$qrycondition);
+	}
+	/**
+         * For preparing inputs for add,edit functions
+	 *
+         * @return bool
+         */
+	function getinputs(){
+		#GETINPUTSFUNCTION#
+	}
+	/**
+         * Checks the existence of a same record
+	 *
+         * @return bool
+         */
+	function check_duplicate(){
+		#CHECKDUPLICATEFUNCTION#
+	}
+}
+?>
